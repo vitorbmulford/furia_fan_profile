@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signIn, signOut, useSession } from "next-auth/react"; // Importando do NextAuth
-import { Button } from "@/components/ui/button"; // Se você já estiver usando o Button personalizado
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 const FormPage = () => {
     const { data: session, status } = useSession();
@@ -14,7 +14,6 @@ const FormPage = () => {
     const [document, setDocument] = useState<File | null>(null);
     const [validation, setValidation] = useState('');
 
-    // Preenchendo o formulário com as informações do usuário logado
     useEffect(() => {
         if (session?.user) {
             setName(session.user.name || '');
@@ -22,7 +21,6 @@ const FormPage = () => {
             setCpf('');
             setInterests('');
             setSocialLinks('');
-            // Aqui você pode preencher outros campos com dados do usuário, se disponíveis
         }
     }, [session]);
 
@@ -41,7 +39,7 @@ const FormPage = () => {
     };
 
     if (status === "loading") {
-        return <p>Carregando...</p>; // Você pode colocar um loading mais estilizado
+        return <p>Carregando...</p>; 
     }
 
     return (
@@ -52,7 +50,6 @@ const FormPage = () => {
                 </h1>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
-                    {/* Nome */}
                     <div className="space-y-2">
                         <label htmlFor="name" className="block text-sm font-medium text-gray-300">Nome Completo</label>
                         <input
@@ -65,7 +62,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Endereço */}
                     <div className="space-y-2">
                         <label htmlFor="address" className="block text-sm font-medium text-gray-300">Endereço</label>
                         <input
@@ -78,7 +74,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* CPF */}
                     <div className="space-y-2">
                         <label htmlFor="cpf" className="block text-sm font-medium text-gray-300">CPF</label>
                         <input
@@ -91,7 +86,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Interesses */}
                     <div className="space-y-2">
                         <label htmlFor="interests" className="block text-sm font-medium text-gray-300">Interesses em eSports</label>
                         <input
@@ -104,7 +98,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Redes Sociais */}
                     <div className="space-y-2">
                         <label htmlFor="socialLinks" className="block text-sm font-medium text-gray-300">Links de Redes Sociais</label>
                         <input
@@ -117,7 +110,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Upload de Documento */}
                     <div className="space-y-2">
                         <label htmlFor="document" className="block text-sm font-medium text-gray-300">Upload de Documento (Ex: Identidade)</label>
                         <input
@@ -128,7 +120,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Validação de Identidade */}
                     <div className="space-y-2">
                         <label htmlFor="validation" className="block text-sm font-medium text-gray-300">Validação de Identidade (AI)</label>
                         <input
@@ -141,7 +132,6 @@ const FormPage = () => {
                         />
                     </div>
 
-                    {/* Botão de Enviar */}
                     <button
                         type="submit"
                         className="w-full py-3 mt-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 rounded-lg text-lg transition duration-200"
@@ -150,7 +140,6 @@ const FormPage = () => {
                     </button>
                 </form>
 
-                {/* Botão de login ou logout */}
                 {session ? (
                     <Button onClick={() => signOut()} className="mt-4 w-full">
                         Sair
