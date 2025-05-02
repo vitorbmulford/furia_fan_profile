@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
+import Main from "./home/page";
 
 export default function Home() {
-  return <Button>Click me</Button>;
+  return <>
+    <Main />
+  </>;
 }
