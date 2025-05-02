@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { db, storage } from "@/lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import InputMask from "react-input-mask";
 
 const FormPage = () => {
     const { data: session, status } = useSession();
@@ -41,7 +40,9 @@ const FormPage = () => {
 
             if (document) {
                 const storageRef = ref(storage, `documents/${cpf}-${document.name}`);
+
                 const snapshot = await uploadBytes(storageRef, document);
+
                 documentUrl = await getDownloadURL(snapshot.ref);
             }
 
@@ -110,21 +111,14 @@ const FormPage = () => {
 
                     <div className="space-y-2">
                         <label htmlFor="cpf" className="block text-sm font-medium text-gray-300">CPF</label>
-                        <InputMask
-                            mask="999.999.999-99"
+                        <input
+                            id="cpf"
+                            type="text"
                             value={cpf}
                             onChange={(e) => setCpf(e.target.value)}
-                        >
-                            {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
-                                <input
-                                    {...inputProps}
-                                    id="cpf"
-                                    type="text"
-                                    placeholder="Seu CPF"
-                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                                />
-                            )}
-                        </InputMask>
+                            placeholder="Seu CPF"
+                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                        />
                     </div>
 
                     <div className="space-y-2">
