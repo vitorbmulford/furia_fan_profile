@@ -3,9 +3,14 @@
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { db, storage } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import InputMask from "react-input-mask";
 
 const FormPage = () => {
     const { data: session, status } = useSession();
+
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [cpf, setCpf] = useState('');
@@ -13,33 +18,62 @@ const FormPage = () => {
     const [socialLinks, setSocialLinks] = useState('');
     const [document, setDocument] = useState<File | null>(null);
     const [validation, setValidation] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (session?.user) {
+        if (session?.user && name === '') {
             setName(session.user.name || '');
+        }
+    }, [session, name]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!name || !address || !cpf || !interests || !socialLinks || !validation) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            let documentUrl = "";
+
+            if (document) {
+                const storageRef = ref(storage, `documents/${cpf}-${document.name}`);
+                const snapshot = await uploadBytes(storageRef, document);
+                documentUrl = await getDownloadURL(snapshot.ref);
+            }
+
+            await addDoc(collection(db, "fans"), {
+                name,
+                address,
+                cpf,
+                interests,
+                socialLinks,
+                validation,
+                documentUrl,
+                email: session?.user?.email || null,
+                createdAt: new Date()
+            });
+
+            alert("Perfil criado com sucesso!");
             setAddress('');
             setCpf('');
             setInterests('');
             setSocialLinks('');
+            setDocument(null);
+            setValidation('');
+        } catch (error) {
+            console.error("Erro ao enviar dados:", error);
+            alert("Erro ao enviar dados. Tente novamente.");
         }
-    }, [session]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        console.log({
-            name,
-            address,
-            cpf,
-            interests,
-            socialLinks,
-            document,
-            validation
-        });
+        setLoading(false);
     };
 
     if (status === "loading") {
-        return <p>Carregando...</p>; 
+        return <p>Carregando...</p>;
     }
 
     return (
@@ -76,14 +110,21 @@ const FormPage = () => {
 
                     <div className="space-y-2">
                         <label htmlFor="cpf" className="block text-sm font-medium text-gray-300">CPF</label>
-                        <input
-                            id="cpf"
-                            type="text"
+                        <InputMask
+                            mask="999.999.999-99"
                             value={cpf}
                             onChange={(e) => setCpf(e.target.value)}
-                            placeholder="Seu CPF"
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                        />
+                        >
+                            {(inputProps: React.InputHTMLAttributes<HTMLInputElement>) => (
+                                <input
+                                    {...inputProps}
+                                    id="cpf"
+                                    type="text"
+                                    placeholder="Seu CPF"
+                                    className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                />
+                            )}
+                        </InputMask>
                     </div>
 
                     <div className="space-y-2">
@@ -116,7 +157,7 @@ const FormPage = () => {
                             id="document"
                             type="file"
                             onChange={(e) => setDocument(e.target.files ? e.target.files[0] : null)}
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
                     </div>
 
@@ -134,9 +175,13 @@ const FormPage = () => {
 
                     <button
                         type="submit"
-                        className="w-full py-3 mt-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 rounded-lg text-lg transition duration-200"
+                        className={`w-full py-3 mt-6 ${loading
+                            ? "bg-gray-700 cursor-not-allowed"
+                            : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                            } text-white rounded-lg text-lg transition duration-200`}
+                        disabled={loading}
                     >
-                        Enviar
+                        {loading ? "Enviando..." : "Enviar"}
                     </button>
                 </form>
 
