@@ -1,20 +1,26 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { db, storage } from "@/lib/firebase";
-import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from '../../../lib/firebase';
+import { signIn, signOut } from "next-auth/react";
+import { collection, addDoc } from 'firebase/firestore';
+import { Button } from "@/components/ui/button";
+
+const validateCpf = (cpf: string) => {
+    const regex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+    return regex.test(cpf);
+};
 
 const FormPage = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [cpf, setCpf] = useState('');
     const [interests, setInterests] = useState('');
-    const [socialLinks, setSocialLinks] = useState('');
+    const [socialLinks, setSocialLinks] = useState<string>(''); 
     const [document, setDocument] = useState<File | null>(null);
     const [validation, setValidation] = useState('');
     const [loading, setLoading] = useState(false);
@@ -25,8 +31,42 @@ const FormPage = () => {
         }
     }, [session, name]);
 
+    const handleSocialLinks = (value: string) => {
+        setSocialLinks(value.split(',').map(link => link.trim()).join(',')); 
+    };
+
+    const validateDocument = async (documentUrl: string, userName: string) => {
+        try {
+            const response = await fetch('/api/validateDocument', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ documentUrl, userName }),
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                alert(data.message || 'Erro na validação do documento');
+                return false;
+            }
+
+            const data = await response.json();
+            return data.isValid;
+        } catch (error) {
+            console.error('Erro ao chamar API de validação:', error);
+            alert('Erro ao validar documento.');
+            return false;
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateCpf(cpf)) {
+            alert("CPF inválido!");
+            return;
+        }
 
         if (!name || !address || !cpf || !interests || !socialLinks || !validation) {
             alert("Por favor, preencha todos os campos obrigatórios.");
@@ -40,10 +80,15 @@ const FormPage = () => {
 
             if (document) {
                 const storageRef = ref(storage, `documents/${cpf}-${document.name}`);
-
                 const snapshot = await uploadBytes(storageRef, document);
-
                 documentUrl = await getDownloadURL(snapshot.ref);
+
+                const isValid = await validateDocument(documentUrl, name);
+                if (!isValid) {
+                    alert("O nome no documento não corresponde ao nome do usuário.");
+                    setLoading(false);
+                    return;
+                }
             }
 
             await addDoc(collection(db, "fans"), {
@@ -72,10 +117,6 @@ const FormPage = () => {
 
         setLoading(false);
     };
-
-    if (status === "loading") {
-        return <p>Carregando...</p>;
-    }
 
     return (
         <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-12">
@@ -139,7 +180,7 @@ const FormPage = () => {
                             id="socialLinks"
                             type="text"
                             value={socialLinks}
-                            onChange={(e) => setSocialLinks(e.target.value)}
+                            onChange={(e) => handleSocialLinks(e.target.value)}
                             placeholder="Ex: Instagram, Twitter, Facebook"
                             className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
@@ -167,27 +208,37 @@ const FormPage = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className={`w-full py-3 mt-6 ${loading
-                            ? "bg-gray-700 cursor-not-allowed"
-                            : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                            } text-white rounded-lg text-lg transition duration-200`}
-                        disabled={loading}
-                    >
-                        {loading ? "Enviando..." : "Enviar"}
-                    </button>
-                </form>
-
-                {session ? (
-                    <Button onClick={() => signOut()} className="mt-4 w-full">
+                    <Button type="submit" disabled={loading} className="w-full mt-4">
+                        {loading ? 'Enviando...' : 'Criar Perfil'}
+                    </Button>
+                    {session ? (
+                        <Button
+                            onClick={() => signOut()}
+                            className="mt-4 w-full px-6 py-3 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+                        >
+                            Sair
+                        </Button>
+                    ) : (
+                        <>
+                            <Button
+                                onClick={() => signIn("google")}
+                                className="mt-4 w-full px-6 py-3 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700 transition-all duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                Entrar com Google
+                            </Button>
+                            {/* <Button
+                                onClick={() => signIn("twitter")} 
+                                className="mt-4 w-full px-6 py-3 bg-blue-700 text-white rounded-lg shadow-lg hover:bg-blue-800 transition-all duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                Entrar com X
+                            </Button> */}
+                        </>
+                    )}
+                    <Button type="button" onClick={() => signOut()} className="w-full mt-4">
                         Sair
                     </Button>
-                ) : (
-                    <Button onClick={() => signIn("google")} className="mt-4 w-full">
-                        Entrar com Google
-                    </Button>
-                )}
+
+                </form>
             </div>
         </div>
     );
