@@ -2,16 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from '../../../lib/firebase';
 import { signIn, signOut } from "next-auth/react";
-import { collection, addDoc } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
-
-const validateCpf = (cpf: string) => {
-    const regex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-    return regex.test(cpf);
-};
+import { createWorker } from 'tesseract.js';
 
 const FormPage = () => {
     const { data: session } = useSession();
@@ -20,9 +13,8 @@ const FormPage = () => {
     const [address, setAddress] = useState('');
     const [cpf, setCpf] = useState('');
     const [interests, setInterests] = useState('');
-    const [socialLinks, setSocialLinks] = useState<string>(''); 
+    const [socialLinks, setSocialLinks] = useState<string>('');
     const [document, setDocument] = useState<File | null>(null);
-    const [validation, setValidation] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -32,91 +24,173 @@ const FormPage = () => {
     }, [session, name]);
 
     const handleSocialLinks = (value: string) => {
-        setSocialLinks(value.split(',').map(link => link.trim()).join(',')); 
+        setSocialLinks(value.split(',').map(link => link.trim()).join(','));
     };
 
-    const validateDocument = async (documentUrl: string, userName: string) => {
-        try {
-            const response = await fetch('/api/validateDocument', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ documentUrl, userName }),
-            });
+    function isNameInText(userName: string, ocrText: string): boolean {
+        const normalize = (str: string) =>
+            str.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-            if (!response.ok) {
+        const normalizedUserName = normalize(userName);
+        const normalizedText = normalize(ocrText);
+
+        const nameParts = normalizedUserName.split(' ').filter(p => p.length >= 3);
+        const textWords = normalizedText.split(/\s+/);
+
+        const blockedNames = ['teste', 'admin', 'nome', 'usuario', 'exemplo'];
+
+        if (blockedNames.some(bad => normalizedUserName.includes(bad))) return false;
+
+        if (nameParts.length < 2) return false;
+
+        let matches = 0;
+        for (const part of nameParts) {
+            if (textWords.includes(part)) {
+                matches++;
+            }
+        }
+
+        return matches >= 2;
+    }
+
+
+    const validateDocument = async (documentUrl: string, userName: string) => {
+        const worker = await createWorker({
+            logger: ({ progress, status }) => {
+                console.log(`Progresso: ${Math.round(progress * 100)}% - ${status}`);
+            }
+        });
+
+        try {
+            await worker.loadLanguage('por');
+            await worker.initialize('por');
+
+            const { data: { text } } = await worker.recognize(documentUrl);
+
+            return isNameInText(userName, text);
+
+        } catch (error) {
+            console.error('Erro no OCR:', error);
+
+            try {
+                const response = await fetch(
+                    `https://api.ocr.space/parse/imageurl?apikey=helloworld&url=${encodeURIComponent(documentUrl)}`
+                );
                 const data = await response.json();
-                alert(data.message || 'Erro na validação do documento');
+                const ocrText = data.ParsedResults[0]?.ParsedText || '';
+                return isNameInText(userName, ocrText);
+            } catch (fallbackError) {
+                console.error('Erro no fallback OCR:', fallbackError);
                 return false;
             }
 
-            const data = await response.json();
-            return data.isValid;
-        } catch (error) {
-            console.error('Erro ao chamar API de validação:', error);
-            alert('Erro ao validar documento.');
-            return false;
+        } finally {
+            await worker.terminate();
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!validateCpf(cpf)) {
-            alert("CPF inválido!");
-            return;
-        }
-
-        if (!name || !address || !cpf || !interests || !socialLinks || !validation) {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
-
         setLoading(true);
+
+        if (name.trim().length < 3) {
+            alert("Nome muito curto para validação.");
+            setLoading(false);
+            return;
+        }
+
+        if (!name || !address || !cpf || !interests || !socialLinks || !document) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            setLoading(false);
+            return;
+        }
 
         try {
             let documentUrl = "";
+            let isValid = true;
 
-            if (document) {
-                const storageRef = ref(storage, `documents/${cpf}-${document.name}`);
-                const snapshot = await uploadBytes(storageRef, document);
-                documentUrl = await getDownloadURL(snapshot.ref);
+            console.log('Documento detectado. Iniciando upload...', {
+                nomeArquivo: document.name,
+                tipo: document.type,
+                tamanho: document.size
+            });
 
-                const isValid = await validateDocument(documentUrl, name);
-                if (!isValid) {
-                    alert("O nome no documento não corresponde ao nome do usuário.");
-                    setLoading(false);
-                    return;
-                }
+            const formData = new FormData();
+            formData.append('file', document);
+            formData.append('upload_preset', 'furiafan');
+
+            const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
+            const response = await fetch(cloudinaryUrl, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Cloudinary error: ${errorData.error.message || 'Erro desconhecido'}`);
             }
 
-            await addDoc(collection(db, "fans"), {
+            const data = await response.json();
+            documentUrl = data.secure_url;
+
+            isValid = await validateDocument(documentUrl, name);
+            if (!isValid) {
+                alert("O nome no documento não corresponde ao nome do usuário.");
+                return;
+            }
+
+            console.log('Preparando dados para API local:', {
                 name,
                 address,
                 cpf,
                 interests,
                 socialLinks,
-                validation,
+                validation: isValid,
                 documentUrl,
                 email: session?.user?.email || null,
-                createdAt: new Date()
+                createdAt: new Date().toISOString()
             });
 
+            const apiResponse = await fetch('/api/fans', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    address,
+                    cpf,
+                    interests,
+                    socialLinks,
+                    validation: isValid,
+                    documentUrl,
+                    email: session?.user?.email || null,
+                    createdAt: new Date().toISOString()
+                })
+            });
+
+            if (!apiResponse.ok) {
+                throw new Error('Falha ao salvar os dados');
+            }
+
+            const responseData = await apiResponse.json();
+            console.log('Dados salvos com sucesso:', responseData);
             alert("Perfil criado com sucesso!");
+
             setAddress('');
             setCpf('');
             setInterests('');
             setSocialLinks('');
             setDocument(null);
-            setValidation('');
+
         } catch (error) {
             console.error("Erro ao enviar dados:", error);
-            alert("Erro ao enviar dados. Tente novamente.");
+            alert(`Erro ao enviar dados: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
+
 
     return (
         <div className="min-h-screen flex justify-center items-start bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-12">
@@ -196,7 +270,8 @@ const FormPage = () => {
                         />
                     </div>
 
-                    <div className="space-y-2">
+
+                    {/* <div className="space-y-2">
                         <label htmlFor="validation" className="block text-sm font-medium text-gray-300">Validação de Identidade (AI)</label>
                         <input
                             id="validation"
@@ -206,7 +281,7 @@ const FormPage = () => {
                             placeholder="Código de validação ou ID"
                             className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
-                    </div>
+                    </div> */}
 
                     <Button type="submit" disabled={loading} className="w-full mt-4">
                         {loading ? 'Enviando...' : 'Criar Perfil'}
@@ -245,3 +320,5 @@ const FormPage = () => {
 };
 
 export default FormPage;
+
+
