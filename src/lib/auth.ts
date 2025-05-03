@@ -10,8 +10,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
     }),
     TwitterProvider({
-      clientId: process.env.AUTH_TWITTER_ID!,
-      clientSecret: process.env.AUTH_TWITTER_SECRET!,
+      clientId: process.env.TWITTER_CLIENT_ID!,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
     }),
   ],
 });

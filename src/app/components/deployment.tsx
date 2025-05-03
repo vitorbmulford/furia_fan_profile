@@ -61,7 +61,7 @@ export default function Deployment() {
                                     <li className="flex items-start">
                                         <Icons.check className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <span className="text-sm font-medium text-white">Next.js 15 na Vercel</span>
+                                            <span className="text-sm font-medium text-white">Next.js 15</span>
                                             <p className="text-xs text-gray-400">Edge Network global para performance e escalabilidade</p>
                                         </div>
                                     </li>
@@ -97,21 +97,21 @@ export default function Deployment() {
                                     <li className="flex items-start">
                                         <Icons.check className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <span className="text-sm font-medium text-white">API Routes no Vercel</span>
+                                            <span className="text-sm font-medium text-white">API Routes</span>
                                             <p className="text-xs text-gray-400">Infraestrutura serverless, escalável sob demanda</p>
                                         </div>
                                     </li>
                                     <li className="flex items-start">
                                         <Icons.check className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <span className="text-sm font-medium text-white">Firebase Firestore</span>
+                                            <span className="text-sm font-medium text-white">Json server </span>
                                             <p className="text-xs text-gray-400">Banco de dados em tempo real, fácil de escalar</p>
                                         </div>
                                     </li>
                                     <li className="flex items-start">
                                         <Icons.check className="h-5 w-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                                         <div>
-                                            <span className="text-sm font-medium text-white">Google Cloud Vision API</span>
+                                            <span className="text-sm font-medium text-white">Tesseract</span>
                                             <p className="text-xs text-gray-400">OCR para validação de documentos enviados</p>
                                         </div>
                                     </li>

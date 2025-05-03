@@ -354,12 +354,16 @@ const FormPage = () => {
                             <div className="mt-2">
                                 <p className="text-sm text-gray-300 mb-1">Pré-visualização:</p>
                                 <img
-                                    src={documentPreview}
+                                    src={documentPreview} 
                                     alt="Preview do documento"
                                     className="max-h-60 rounded-md border border-gray-700"
                                 />
                             </div>
                         )}
+
+
+
+
                     </div>
 
                     {(uploadProgress > 0 || ocrProgress > 0) && (
@@ -404,17 +408,31 @@ const FormPage = () => {
                             Sair da Conta
                         </Button>
                     ) : (
-                        <Button
-                            onClick={() => signIn("google")}
-                            variant="outline"
-                            className="mt-4 w-full py-6 text-lg font-semibold bg-white text-gray-900 hover:bg-gray-200"
-                        >
-                            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill="currentColor" d="M12.3 7.4L12 7.1C11.4 7.1 10.8 7.3 10.3 7.6L9.3 8.5L9.1 9.4C9.1 9.9 9.3 10.3 9.6 10.6L9.9 11C10.4 11.5 11.2 11.6 11.7 11.3C12.1 11 12.2 10.4 11.9 10.1L10.7 9.5C11.1 8.8 11.7 8.6 12.3 8.8C12.9 9 13.2 9.5 13.2 10.1C13.2 10.5 13 11 12.7 11.3C12.4 11.5 12 11.6 11.6 11.6C11.2 11.6 10.8 11.4 10.6 11.1C10.5 11 10.3 10.8 10.1 10.7L10.3 10.4C10.6 10.3 11.1 10.1 11.4 9.8C11.7 9.5 12 9.2 12.2 8.9C12.4 8.6 12.6 8.2 12.7 7.9C12.8 7.7 13 7.5 13.2 7.2C13.3 7 13.2 6.7 12.9 6.6C12.6 6.5 12.4 6.5 12.3 7.4Z"></path>
-                            </svg>
-                            Entrar com Google
-                        </Button>
+                        <>
+                            {['google', 'twitter'].map((provider) => (
+                                <Button
+                                    key={provider}
+                                    onClick={() => signIn(provider)}
+                                    variant="outline"
+                                    className="mt-4 w-full py-6 text-lg font-semibold bg-white text-gray-900 hover:bg-gray-200"
+                                >
+                                    <svg
+                                        className="w-5 h-5 mr-2"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M12.3 7.4L12 7.1C11.4 7.1 10.8 7.3 10.3 7.6L9.3 8.5L9.1 9.4C9.1 9.9 9.3 10.3 9.6 10.6L9.9 11C10.4 11.5 11.2 11.6 11.7 11.3C12.1 11 12.2 10.4 11.9 10.1L10.7 9.5C11.1 8.8 11.7 8.6 12.3 8.8C12.9 9 13.2 9.5 13.2 10.1C13.2 10.5 13 11 12.7 11.3C12.4 11.5 12 11.6 11.6 11.6C11.2 11.6 10.8 11.4 10.6 11.1C10.5 11 10.3 10.8 10.1 10.7L10.3 10.4C10.6 10.3 11.1 10.1 11.4 9.8C11.7 9.5 12 9.2 12.2 8.9C12.4 8.6 12.6 8.2 12.7 7.9C12.8 7.7 13 7.5 13.2 7.2C13.3 7 13.2 6.7 12.9 6.6C12.6 6.5 12.4 6.5 12.3 7.4Z"
+                                        ></path>
+                                    </svg>
+                                    Entrar com {provider === 'google' ? 'Google' : 'Twitter'}
+                                </Button>
+                            ))}
+                        </>
                     )}
+
                 </form>
             </div>
         </div>

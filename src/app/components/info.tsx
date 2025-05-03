@@ -12,9 +12,8 @@ const techFeatures = [
         items: [
             "Nome, CPF, endereço, interesses",
             "Eventos e produtos relacionados à FURIA",
-            "Validação com Zod no frontend e backend",
             "Autenticação com Firebase Auth",
-            "Armazenamento no Firebase Firestore"
+            "Armazenamento no Json server"
         ],
     },
     {
@@ -23,9 +22,8 @@ const techFeatures = [
         icon: Icons.upload,
         items: [
             "Suporte a imagens e PDFs (RG, CNH, comprovantes)",
-            "Upload seguro via Firebase Storage",
-            "OCR com Google Cloud Vision API",
-            "Validação semântica via Mistral 7B Instruct",
+            "Upload seguro via Cloudinary",
+            "OCR com tesseract.js",
             "Extração de dados automatizada"
         ],
     },

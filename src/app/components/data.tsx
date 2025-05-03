@@ -12,22 +12,21 @@ const dataStructures = [
             "Interesses em eSports e Eventos",
             "Produtos comprados",
             "Formulários validados (client e server)",
-            "Armazenamento no Firestore"
+            "Armazenamento no Json server",
         ],
     },
     {
         name: "Upload de Documentos",
         items: [
             "Documentos (RG, CNH, Comprovante de Endereço)",
-            "Armazenamento seguro no Firebase Storage",
+            "Armazenamento seguro no Json server",
             "Vinculação automática ao perfil do usuário"
         ],
     },
     {
         name: "Validação com IA (Identidade)",
         items: [
-            "Processamento de documentos com Google Cloud Vision API (OCR)",
-            "Validação e extração de dados via Mistral 7B Instruct",
+            "Processamento de documentos com tesseract.js",
             "Análise de coerência dos documentos"
         ],
     },
@@ -35,7 +34,7 @@ const dataStructures = [
         name: "Integração com Redes Sociais",
         items: [
             "Links de redes sociais (Twitter, Instagram, etc.)",
-            "Armazenamento no Firestore",
+            "Armazenamento no JSON server",
             "Análise do engajamento com eSports e FURIA"
         ],
     },
