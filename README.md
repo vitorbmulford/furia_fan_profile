@@ -66,5 +66,5 @@ A ideia é aproximar ainda mais a comunidade da FURIA usando **tecnologia de pon
 
 ---
 
-## 📁 Estrutura do Projeto
+
 
