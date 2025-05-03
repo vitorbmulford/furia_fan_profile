@@ -1,3 +1,16 @@
 {
-  "fans": []
+  "fans": [
+    {
+      "name": "vitor bebiano mulford",
+      "address": "teste",
+      "cpf": "54463499895",
+      "interests": "csgo",
+      "socialLinks": "https://x.com/vitorb1m123",
+      "validation": true,
+      "documentUrl": "https://res.cloudinary.com/drtb983ix/image/upload/v1746296974/kno3tiby5cgf6akpn921.jpg",
+      "email": null,
+      "createdAt": "2025-05-03T18:29:11.956Z",
+      "id": "1746296952273"
+    }
+  ]
 }

@@ -354,7 +354,7 @@ const FormPage = () => {
                             <div className="mt-2">
                                 <p className="text-sm text-gray-300 mb-1">Pré-visualização:</p>
                                 <img
-                                    src={documentPreview} 
+                                    src={documentPreview}
                                     alt="Preview do documento"
                                     className="max-h-60 rounded-md border border-gray-700"
                                 />
