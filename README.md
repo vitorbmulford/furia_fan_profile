@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🦁 FURIA Fan Profiler
 
-## Getting Started
+Plataforma interativa para **reconhecimento e engajamento de fãs da FURIA** com uso de tecnologias modernas, inteligência artificial e integração com redes sociais.
 
-First, run the development server:
+## 🚀 Sobre o Projeto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+O **FURIA Fan Profiler** é uma aplicação web que coleta, valida e analisa dados de torcedores da FURIA, criando perfis ricos e interativos com base em documentos, engajamento online e preferências pessoais.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Por meio de IA e integrações inteligentes, conseguimos determinar o nível de fanatismo dos usuários, promovendo uma experiência única e personalizada.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧠 Funcionalidades Principais
 
-## Learn More
+### 📋 Coleta & Validação de Dados
 
-To learn more about Next.js, take a look at the following resources:
+Formulários inteligentes com validação client/server e armazenamento seguro.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Nome, CPF, endereço, interesses
+- Eventos e produtos relacionados à FURIA
+- Autenticação via Firebase
+- Armazenamento em JSON Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### 📎 Upload de Documentos com IA
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Documentos são processados e analisados para garantir a autenticidade e extrair dados automaticamente.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Suporte a imagens e PDFs (RG, CNH, comprovantes)
+- Upload seguro com Cloudinary
+- OCR com `tesseract.js`
+- Extração de dados via IA
+
+---
+
+### 🔗 Engajamento Social & Análise de Perfil
+
+IA avalia a presença e envolvimento do fã no universo competitivo e nas redes sociais.
+
+- Links para Twitter, Instagram e outras plataformas
+- Análise de postagens relacionadas a eSports
+- Perfis HLTV, Faceit, Liquipedia
+- Classificação automática do nível de fã
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Next.js 15** (App Router)
+- **Framer Motion** (animações)
+- **Firebase Auth** (autenticação)
+- **JSON Server** (armazenamento local)
+- **Cloudinary** (upload de arquivos)
+- **Tesseract.js** (OCR via JavaScript)
+- **Tailwind CSS** (estilização)
+- **React Icons personalizados**
+
+---
+
+## 🎯 Objetivo
+
+Criar uma fan experience de outro nível, onde o envolvimento real com o time possa ser medido, reconhecido e recompensado.
+
+A ideia é aproximar ainda mais a comunidade da FURIA usando **tecnologia de ponta**, **automação inteligente** e **estética gamer competitiva**.
+
+---
+
+## 📁 Estrutura do Projeto
+
