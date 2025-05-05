@@ -173,7 +173,7 @@ Aqui estão alguns exemplos para testar o funcionamento do formulário de criaç
 - **Links de Redes Sociais:**  
   `https://instagram.com/anacarolina`, `https://twitter.com/anacarolfps`  
 - **Documento de Identificação:**  
-  Imagem com o nome "Ana Carolina Souza" claramente legível (formato JPG/PNG)
+  Documento com o nome "Ana Carolina Souza" claramente legível (formato JPG/PNG)
 
 > 💡 **Importante:** O nome informado deve estar visível no documento enviado. Certifique-se de que o arquivo está legível para que o OCR funcione corretamente.
 
@@ -192,6 +192,45 @@ Aqui estão alguns exemplos para testar o funcionamento do formulário de criaç
 
 - Deixe qualquer campo como CPF, nome ou documento vazio.  
 - Resultado: ❌ O sistema impedirá o envio e solicitará o preenchimento correto.
+
+## 📁 Estrutura do Projeto
+
+Abaixo está a organização de diretórios e arquivos principais do projeto, com uma breve descrição de suas responsabilidades:
+
+src/
+├── app/
+│ ├── actions/
+│ │ └── handle-auth.ts # Manipulação de autenticação personalizada
+│ ├── api/ # Endpoints da API (ex: criação de perfis de fãs)
+│ ├── auth/ # Configurações de autenticação (NextAuth)
+│ ├── [...nextauth]/
+│ │ └── route.ts # Rota do NextAuth para autenticação de usuários
+│ ├── components/ # Componentes reutilizáveis da interface
+│ │ ├── data.tsx # Dados ou conteúdo dinâmico da UI
+│ │ ├── deployment.tsx # Seção de deployment da UI
+│ │ ├── footer.tsx # Rodapé do site
+│ │ ├── header.tsx # Cabeçalho do site
+│ │ ├── hero.tsx # Seção hero da landing page
+│ │ ├── icons.tsx # Ícones customizados usados no projeto
+│ │ ├── info.tsx # Seção de informações
+│ │ └── stats.tsx # Estatísticas exibidas na UI
+│ ├── fans/ # Funcionalidades relacionadas a usuários/fãs (ex: criação de perfil)
+│ ├── upload/ # Lógica de upload de arquivos (documentos de identificação)
+│ ├── home/ # Página inicial e sua estrutura
+│ ├── pages/ # Outras páginas auxiliares do projeto
+│ ├── form/ # Formulários de entrada de dados (ex: formulário de perfil de fã)
+│ ├── profile/ # Página de perfil do usuário
+│ ├── favicon.ico # Ícone da aba do navegador
+│ ├── globals.css # Estilos globais do projeto
+│ ├── layout.tsx # Layout principal aplicado a todas as páginas
+│ ├── page.module.css # Estilização específica da página principal
+│ └── page.tsx # Página principal do projeto
+├── lib/
+│ ├── auth.ts # Utilitários e helpers para autenticação
+│ └── utils.ts # Funções utilitárias gerais usadas pelo projeto
+
+
+> ✅ Essa organização permite escalar facilmente as funcionalidades, separando bem lógica de negócios, autenticação, componentes visuais e formulários.
 
 
 
