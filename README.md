@@ -68,7 +68,82 @@ Criar uma fan experience de outro nível, onde o envolvimento real com o time po
 
 A ideia é aproximar ainda mais a comunidade da FURIA usando **tecnologia de ponta**, **automação inteligente** e **estética gamer competitiva**.
 
----
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/vitorbmulford/furia_fan_profile
+
+2. Instale as dependências
+
+Certifique-se de ter o Node.js instalado na sua máquina.
+
+Sempre exibir os detalhes
+
+npm install
+
+3. Configurar as chaves de API
+
+Para rodar o projeto, você precisará obter algumas chaves e configurar as variáveis de ambiente. Siga os passos abaixo:
+
+Chaves do Google (AUTH_GOOGLE_ID e AUTH_GOOGLE_SECRET):
+
+  Acesse o Google Cloud Console.
+
+  Crie um projeto e vá em APIs e serviços → Credenciais.
+
+  Crie um ID do Cliente OAuth e copie o ID do Cliente e o Segredo do Cliente.
+
+  Adicione essas chaves no seu .env:
+
+  AUTH_GOOGLE_ID=your_google_client_id
+  AUTH_GOOGLE_SECRET=your_google_client_secret
+
+Chave do NextAuth (AUTH_SECRET):
+
+  npx auth secret
+  
+  Adicione no seu .env:
+  
+  AUTH_SECRET=your_nextauth_secret
+
+
+Exemplo do .env:
+  
+AUTH_SECRET
+Gere um segredo aleatório (por exemplo, com openssl rand -base64 32 ou use um gerador online).
+
+AUTH_GOOGLE_ID & AUTH_GOOGLE_SECRET
+
+    Acesse Google Cloud Console
+
+    Crie um projeto > OAuth 2.0 Client IDs
+
+    Configure a URI de redirecionamento: http://localhost:3000/api/auth/callback/google
+
+    Copie o Client ID e Secret.
+
+TWITTER_CLIENT_ID & TWITTER_CLIENT_SECRET
+
+    Vá para Twitter Developer Portal
+
+    Crie um App e habilite OAuth 2.0
+
+    Use http://localhost:3000/api/auth/callback/twitter como URI de callback.
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_URL
+
+    Crie uma conta em Cloudinary
+
+    Vá em Dashboard e copie o Cloud name, API Key, API Secret e Cloudinary URL.
+
+4. Inicie o servidor
+
+Sempre exibir os detalhes
+
+npm run dev
+
+O projeto estará disponível em http://localhost:3000.
+
 
 
 
