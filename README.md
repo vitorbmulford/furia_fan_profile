@@ -71,78 +71,95 @@ A ideia é aproximar ainda mais a comunidade da FURIA usando **tecnologia de pon
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/vitorbmulford/furia_fan_profile
+## ⚙️ Como rodar o projeto localmente
 
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/vitorbmulford/furia_fan_profile
 2. Instale as dependências
 
-Certifique-se de ter o Node.js instalado na sua máquina.
-
-Sempre exibir os detalhes
+Certifique-se de ter o Node.js instalado.
 
 npm install
 
-3. Configurar as chaves de API
+3. Configure as variáveis de ambiente
 
-Para rodar o projeto, você precisará obter algumas chaves e configurar as variáveis de ambiente. Siga os passos abaixo:
+Para rodar o projeto, você precisará obter algumas chaves de API. Siga os passos abaixo para configurar seu arquivo .env.
+🔐 Chave do NextAuth
 
-Chaves do Google (AUTH_GOOGLE_ID e AUTH_GOOGLE_SECRET):
+Gere um segredo com o comando:
 
-  Acesse o Google Cloud Console.
+npx auth secret
 
-  Crie um projeto e vá em APIs e serviços → Credenciais.
+Adicione ao seu .env:
 
-  Crie um ID do Cliente OAuth e copie o ID do Cliente e o Segredo do Cliente.
+AUTH_SECRET=your_nextauth_secret
 
-  Adicione essas chaves no seu .env:
+🔑 Chaves do Google
 
-  AUTH_GOOGLE_ID=your_google_client_id
-  AUTH_GOOGLE_SECRET=your_google_client_secret
+    Acesse o Google Cloud Console
 
-Chave do NextAuth (AUTH_SECRET):
+    Crie um projeto e vá em APIs e serviços → Credenciais
 
-  npx auth secret
-  
-  Adicione no seu .env:
-  
-  AUTH_SECRET=your_nextauth_secret
+    Crie um ID do Cliente OAuth 2.0
 
+    Use esta URI de redirecionamento:
 
-Exemplo do .env:
-  
-AUTH_SECRET
-Gere um segredo aleatório (por exemplo, com openssl rand -base64 32 ou use um gerador online).
+    http://localhost:3000/api/auth/callback/google
 
-AUTH_GOOGLE_ID & AUTH_GOOGLE_SECRET
+    Copie o Client ID e Client Secret e adicione ao seu .env:
 
-    Acesse Google Cloud Console
+AUTH_GOOGLE_ID=your_google_client_id  
+AUTH_GOOGLE_SECRET=your_google_client_secret
 
-    Crie um projeto > OAuth 2.0 Client IDs
+🐦 Chaves do Twitter
 
-    Configure a URI de redirecionamento: http://localhost:3000/api/auth/callback/google
-
-    Copie o Client ID e Secret.
-
-TWITTER_CLIENT_ID & TWITTER_CLIENT_SECRET
-
-    Vá para Twitter Developer Portal
+    Acesse o Twitter Developer Portal
 
     Crie um App e habilite OAuth 2.0
 
-    Use http://localhost:3000/api/auth/callback/twitter como URI de callback.
+    Use esta URI de callback:
 
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_URL
+    http://localhost:3000/api/auth/callback/twitter
+
+    Copie as credenciais e adicione ao seu .env:
+
+TWITTER_CLIENT_ID=your_twitter_client_id  
+TWITTER_CLIENT_SECRET=your_twitter_client_secret
+
+☁️ Chaves do Cloudinary
 
     Crie uma conta em Cloudinary
 
-    Vá em Dashboard e copie o Cloud name, API Key, API Secret e Cloudinary URL.
+    No Dashboard, copie as seguintes informações:
+
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name  
+CLOUDINARY_API_KEY=your_api_key  
+CLOUDINARY_API_SECRET=your_api_secret  
+CLOUDINARY_URL=your_cloudinary_url
+
+    💡 Dica: O CLOUDINARY_URL geralmente é fornecido automaticamente no formato:
+    cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+
+📁 Exemplo de .env
+
+AUTH_SECRET=
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+TWITTER_CLIENT_ID=
+TWITTER_CLIENT_SECRET=
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_URL=
 
 4. Inicie o servidor
 
-Sempre exibir os detalhes
-
 npm run dev
 
-O projeto estará disponível em http://localhost:3000.
+Acesse o projeto em: http://localhost:3000
+
 
 
 
