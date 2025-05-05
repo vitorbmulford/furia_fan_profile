@@ -218,8 +218,8 @@ src/
 │ ├── upload/ # Lógica de upload de arquivos (documentos de identificação)
 │ ├── home/ # Página inicial e sua estrutura
 │ ├── pages/ # Outras páginas auxiliares do projeto
-│ ├── form/ # Formulários de entrada de dados (ex: formulário de perfil de fã)
-│ ├── profile/ # Página de perfil do usuário
+│  └── form/ # Formulários de entrada de dados (ex: formulário de perfil de fã)
+│  └── profile/ # Página de perfil do usuário
 │ ├── favicon.ico # Ícone da aba do navegador
 │ ├── globals.css # Estilos globais do projeto
 │ ├── layout.tsx # Layout principal aplicado a todas as páginas
