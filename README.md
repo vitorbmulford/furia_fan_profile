@@ -34,14 +34,18 @@ Documentos são processados e analisados para garantir a autenticidade e extrair
 
 ---
 
-### 🔗 Engajamento Social & Análise de Perfil
+🔗 Engajamento Social & Análise de Perfil
 
-IA avalia a presença e envolvimento do fã no universo competitivo e nas redes sociais.
+A análise da presença e envolvimento do fã no universo competitivo e nas redes sociais é feita com Cheerio, uma biblioteca de scraping em Node.js. Em vez de usar IA, o sistema coleta e interpreta dados diretamente de:
 
-- Links para Twitter, Instagram e outras plataformas
-- Análise de postagens relacionadas a eSports
-- Perfis HLTV, Faceit, Liquipedia
-- Classificação automática do nível de fã
+    Perfis em Twitter, Instagram e outras plataformas
+
+    Postagens relacionadas a eSports
+
+    Perfis públicos como HLTV, Faceit e Liquipedia
+
+Essas informações são usadas para classificar automaticamente o nível de engajamento do fã com base em critérios definidos, como frequência de interações e presença em plataformas competitivas.
+
 
 ---
 
