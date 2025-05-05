@@ -160,6 +160,40 @@ npm run dev
 
 Acesse o projeto em: http://localhost:3000
 
+## 🧪 Exemplos de Uso para Testar
+
+Aqui estão alguns exemplos para testar o funcionamento do formulário de criação de perfil de fã da FURIA:
+
+### ✅ Exemplo 1 — Cadastro Válido
+
+- **Nome Completo:** Ana Carolina Souza  
+- **CPF:** 123.456.789-09 *(válido fictício)*  
+- **Endereço:** Rua das Palmeiras, 123 - São Paulo, SP  
+- **Interesses:** CS:GO, Valorant, LoL  
+- **Links de Redes Sociais:**  
+  `https://instagram.com/anacarolina`, `https://twitter.com/anacarolfps`  
+- **Documento de Identificação:**  
+  Imagem com o nome "Ana Carolina Souza" claramente legível (formato JPG/PNG)
+
+> 💡 **Importante:** O nome informado deve estar visível no documento enviado. Certifique-se de que o arquivo está legível para que o OCR funcione corretamente.
+
+### ⚠️ Exemplo 2 — CPF Inválido
+
+- **CPF:** 111.111.111-11  
+- Resultado: ❌ O sistema exibirá um erro de CPF inválido.
+
+### ⚠️ Exemplo 3 — Documento sem Nome Compatível
+
+- **Nome Informado:** João da Silva  
+- **Documento:** Imagem contendo o nome "Carlos Eduardo"  
+- Resultado: ❌ O sistema alertará que o nome não bate com o documento.
+
+### ⚠️ Exemplo 4 — Campos Obrigatórios Vazios
+
+- Deixe qualquer campo como CPF, nome ou documento vazio.  
+- Resultado: ❌ O sistema impedirá o envio e solicitará o preenchimento correto.
+
+
 
 
 
